@@ -32,11 +32,13 @@ trap cleanup EXIT
 
 # 检查本脚本是否已经在运行
 check_self_running() {
-    local count=$(pgrep -f "$SCRIPT_NAME" | wc -l)
-    # 减去当前进程
-    count=$((count - 1))
+    # 获取当前进程的PID
+    local current_pid=$$
+    # 使用更精确的模式匹配，排除当前进程
+    local pids=$(pgrep -f "[^0-9]$SCRIPT_NAME" | grep -v "$current_pid")
     
-    if [ $count -gt 0 ]; then
+    if [ -n "$pids" ]; then
+        local count=$(echo "$pids" | wc -l)
         echo "检测到 $SCRIPT_NAME 已有 $count 个实例在运行，退出..."
         exit 1
     fi
