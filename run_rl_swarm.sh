@@ -99,12 +99,19 @@ if [ "$CONNECT_TO_TESTNET" = "True" ]; then
 
     # 等待API密钥被客户端激活
     echo "等待API密钥激活..."
+    WAIT_NUM=0
     while true; do
         STATUS=$(curl -s "http://localhost:3000/api/get-api-key-status?orgId=$ORG_ID")
         if [[ "$STATUS" == "activated" ]]; then
             echo "API密钥已激活！继续进行..."
             break
         else
+            WAIT_NUM=$((WAIT_NUM + 1))
+            if [ $WAIT_NUM -eq 5 ]; then
+                echo "Traceback 等待API密钥激活超时！"
+                sleep 15
+                exit 1
+            fi
             echo "等待API密钥激活..."
             sleep 5
         fi

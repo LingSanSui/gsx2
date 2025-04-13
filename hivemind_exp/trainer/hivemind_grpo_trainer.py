@@ -60,7 +60,7 @@ class HivemindGRPOTrainer:
             self.node = node
             self.dht = dht
             self.logger = logger
-            self.stage_rewards = 80.0  # 阶段奖励累计值
+            self.stage_rewards = 300.0  # 阶段奖励累计值
             super().__init__(processing_class=tokenizer, **kwargs)
 
         def publish_leaderboard(self):
@@ -104,11 +104,26 @@ class HivemindGRPOTrainer:
             # 奖励函数必须保存node.outputs和node.rewards!
             # 这里的代码负责在适当的时间将数据发布到DHT
             # 每N步发布一次数据到DHT
+            self.logger.info(
+                f"  ✅✅✅✅✅✅------✅✅✅✅✅ "
+            )
             if self.state.global_step % CADENCE_OF_UPDATE_STEPS == 0:
                 question = self.node.outputs["question"]
                 q_hash = hashlib.md5(question.encode()).hexdigest()
 
                 value = (time.time(), self.node.outputs)
+                self.logger.info(
+                    f"  --->>   key值为             {node_outputs_key(self.node)}"
+                )
+                self.logger.info(
+                    f"  --->>   subkey值为          {q_hash}"
+                )
+                self.logger.info(
+                    f"  --->>   value值为           {value}"
+                )
+                self.logger.info(
+                    f"  --->>   expiration_time值为 {get_dht_time() + self.node.out_expiration}"
+                )
                 self.dht.store(
                     key=node_outputs_key(self.node),
                     subkey=q_hash,
@@ -121,6 +136,22 @@ class HivemindGRPOTrainer:
 
                 # 累加最新的奖励值
                 self.stage_rewards += sum(self.node.rewards)
+                
+                self.logger.info(
+                    f"  --->>   key值为             {rewards_key(self.node.round_num, self.node.stage_num)}"
+                )
+                self.logger.info(
+                    f"  --->>   subkey值为          {self.node.key}"
+                )
+                self.logger.info(
+                    f"  --->>   value值为            {self.stage_rewards}"
+                )
+                self.logger.info(
+                    f"  --->>   expiration_time值为 {get_dht_time() + self.node.out_expiration}"
+                )
+                self.logger.info(
+                    f"  ✅✅✅✅✅✅------✅✅✅✅✅ "
+                )
                 self.dht.store(
                     key=rewards_key(self.node.round_num, self.node.stage_num),
                     subkey=self.node.key,
