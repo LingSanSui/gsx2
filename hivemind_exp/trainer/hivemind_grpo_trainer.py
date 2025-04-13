@@ -105,9 +105,12 @@ class HivemindGRPOTrainer:
             # 这里的代码负责在适当的时间将数据发布到DHT
             # 每N步发布一次数据到DHT
             self.logger.info(
-                f"  ✅✅✅✅✅✅------✅✅✅✅✅ "
+                f"  global_step值为       {self.state.global_step} "
             )
             if self.state.global_step % CADENCE_OF_UPDATE_STEPS == 0:
+                self.logger.info(
+                    f"  ✅✅✅✅✅✅--{self.state.global_step}--✅✅✅✅✅ "
+                )
                 question = self.node.outputs["question"]
                 q_hash = hashlib.md5(question.encode()).hexdigest()
 
@@ -150,7 +153,7 @@ class HivemindGRPOTrainer:
                     f"  --->>   expiration_time值为 {get_dht_time() + self.node.out_expiration}"
                 )
                 self.logger.info(
-                    f"  ✅✅✅✅✅✅------✅✅✅✅✅ "
+                    f"  ✅✅✅✅✅✅--{self.state.global_step}--✅✅✅✅✅ "
                 )
                 self.dht.store(
                     key=rewards_key(self.node.round_num, self.node.stage_num),
