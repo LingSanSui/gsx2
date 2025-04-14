@@ -60,7 +60,7 @@ class HivemindGRPOTrainer:
             self.node = node
             self.dht = dht
             self.logger = logger
-            self.stage_rewards = 7200.0  # 阶段奖励累计值
+            self.stage_rewards = 0.0  # 阶段奖励累计值
             super().__init__(processing_class=tokenizer, **kwargs)
 
         def publish_leaderboard(self):
