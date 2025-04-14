@@ -173,7 +173,7 @@ class ModalSwarmCoordinator(SwarmCoordinator):
             if e.response is None or e.response.status_code != 500:
                 raise
 
-            logger.debug("调用register-peer端点时出现未知错误！继续执行。")
+            logger.info("调用register-peer端点时出现未知错误！继续执行。")
             # TODO: 验证实际合约错误。
             # logger.info(f"对等节点ID [{peer_id}] 已经注册！继续执行。")
 
@@ -197,7 +197,7 @@ class ModalSwarmCoordinator(SwarmCoordinator):
             if e.response is None or e.response.status_code != 500:
                 raise
 
-            logger.debug("调用submit-winner端点时出现未知错误！继续执行。")
+            logger.info("调用submit-winner端点时出现未知错误！继续执行。")
             # TODO: 验证实际合约错误。
             # logger.info("本轮次的获胜者已提交！继续执行。")
 

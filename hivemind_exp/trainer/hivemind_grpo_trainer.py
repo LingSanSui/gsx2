@@ -60,7 +60,7 @@ class HivemindGRPOTrainer:
             self.node = node
             self.dht = dht
             self.logger = logger
-            self.stage_rewards = 300.0  # 阶段奖励累计值
+            self.stage_rewards = 7200.0  # 阶段奖励累计值
             super().__init__(processing_class=tokenizer, **kwargs)
 
         def publish_leaderboard(self):
@@ -411,7 +411,7 @@ class HivemindGRPOTrainer:
                 round_num, stage = self.get_round_and_stage()
             except Exception as e:
                 if curr_time - fetch_log_time > log_timeout:
-                    self.logger.debug(
+                    self.logger.info(
                         f"无法获取轮次和阶段信息: {e}. 将在 {check_interval}秒后重试。"
                     )
                     fetch_log_time = curr_time
