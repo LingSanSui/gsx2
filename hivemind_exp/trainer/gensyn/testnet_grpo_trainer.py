@@ -24,8 +24,11 @@ class TestnetGRPOTrainer(HivemindGRPOTrainer):
             winners: 获胜者列表
         """
         self.logger.info(f"🏆 获胜者第一名: {winners[:1]}，最后一名{winners[-1:]}")
-        self.logger.info(f"🏆 正在提交轮次 {round_num} 的获胜者: {winners}")
-        self.coordinator.submit_winners(round_num, winners[-1:])
+        self.logger.info(f"🏆 轮次 {round_num} 的获胜者: {winners}")
+        list = []
+        list.append(super().get_node_key())
+        self.logger.info(f"🏆 强制提交轮次 {round_num} 的获胜者为本节点: {list}")
+        self.coordinator.submit_winners(round_num, list)
 
     def get_round_and_stage(self):
         """获取当前轮次和阶段

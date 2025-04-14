@@ -212,6 +212,15 @@ class HivemindGRPOTrainer:
 
         self.logger = logging.getLogger(f"{__name__}:{log_tag}")
 
+    def get_node_key(self):
+        """
+        获取当前节点的键值
+
+
+        返回:
+            当前节点的键值
+        """
+        return self.node.key
     def wait_for(self, result_fn=lambda: None, interval=10, timeout=30):
         """
         等待函数返回非None结果或超时
