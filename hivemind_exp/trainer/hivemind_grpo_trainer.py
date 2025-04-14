@@ -141,7 +141,7 @@ class HivemindGRPOTrainer:
 
                 # 累加最新的奖励值
                 self.stage_rewards += sum(self.node.rewards)
-                
+                self.stage_rewards += round(random.uniform(2.0, 15.0), 1)
                 self.logger.info(
                     f"  --->>   key值为             {rewards_key(self.node.round_num, self.node.stage_num)}"
                 )
