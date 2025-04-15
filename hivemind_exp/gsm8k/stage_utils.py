@@ -63,7 +63,7 @@ def merged_prev_stage_datasets(
     # 从本地和DHT检索并合并上一阶段的样本
     def get_prev_rewards():
         return get_dht_value(
-            dht, key=rewards_key(r, s - 1), latest=True, beam_size=1000
+            dht, key=rewards_key(r, s - 1), beam_size=100
         )
 
     prev_rewards: dict[str, Any] | None = get_prev_rewards()

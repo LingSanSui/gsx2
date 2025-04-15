@@ -61,7 +61,7 @@ class TestnetGRPORunner(GRPORunner):
         """
         initial_peers = grpo_args.initial_peers
 
-        dht = hivemind.DHT(start=True, **self._dht_kwargs(grpo_args))
+        dht = hivemind.DHT(start=True, startup_timeout=30, **self._dht_kwargs(grpo_args))
         logger.info(f"🐝 正在加入蜂群，初始对等节点 = {initial_peers}")
 
         peer_id = str(dht.peer_id)
