@@ -184,22 +184,32 @@ class ModalSwarmCoordinator(SwarmCoordinator):
             round_num: 轮次编号
             winners: 获胜者列表
         """
+        args = (
+            self.org_id,
+            "submit-winner",
+            {"roundNumber": round_num, "winners": winners},
+        )
+        
         try:
-            args = (
-                self.org_id,
-                "submit-winner",
-                {"roundNumber": round_num, "winners": winners},
-            )
-            send_via_api(
-                *args
-            )
+            send_via_api(*args)
         except requests.exceptions.HTTPError as e:
             if e.response is None or e.response.status_code != 500:
                 raise
 
-            logger.info("调用submit-winner端点时出现未知错误！继续执行。")
-            # TODO: 验证实际合约错误。
-            # logger.info("本轮次的获胜者已提交！继续执行。")
+            logger.info("调用submit-winner端点时出现未知错误！等待10秒后重试...")
+            # 等待10秒后重试
+            time.sleep(10)
+            
+            try:
+                send_via_api(*args)
+                logger.info("重试成功：已提交轮次获胜者")
+            except requests.exceptions.HTTPError as e:
+                if e.response is None or e.response.status_code != 500:
+                    raise
+                    
+                logger.info("重试后仍然失败！继续执行。")
+                # TODO: 验证实际合约错误。
+                # logger.info("本轮次的获胜者已提交！继续执行。")
 
 
 def send_via_api(org_id, method, args):
